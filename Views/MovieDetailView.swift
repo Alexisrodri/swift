@@ -94,9 +94,10 @@ struct MovieDetailView: View {
                             .font(.body)
                             .foregroundColor(.secondary)
                             .lineSpacing(8)
-                            .multilineTextAlignment(.center)
+                            .multilineTextAlignment(.leading)
+                            .frame(maxWidth: .infinity, alignment: .leading)
                     }
-                    .padding(.horizontal, 32)
+                    .padding(.horizontal, 24)
                     .padding(.top, 40)
                     
                     // Estadísticas en columna
@@ -122,7 +123,7 @@ struct MovieDetailView: View {
                             color: .green
                         )
                     }
-                    .padding(.horizontal, 32)
+                    .padding(.horizontal, 24)
                     
                     Spacer(minLength: 50)
                 }
