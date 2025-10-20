@@ -111,6 +111,58 @@ struct MovieCardVertical: View {
     }
 }
 
+// MARK: - Movie Card Horizontal Component
+struct MovieCardHorizontal: View {
+    let movie: Movie
+    let onTap: () -> Void
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            // Imagen de la película
+            AsyncImage(url: URL(string: movie.posterURL)) { image in
+                image
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+            } placeholder: {
+                Rectangle()
+                    .fill(Color.gray.opacity(0.3))
+                    .overlay(
+                        Image(systemName: "photo")
+                            .foregroundColor(.gray)
+                            .font(.title2)
+                    )
+            }
+            .frame(width: 120, height: 180)
+            .cornerRadius(12)
+            .clipped()
+            
+            // Información de la película
+            VStack(alignment: .leading, spacing: 4) {
+                // Título
+                Text(movie.title)
+                    .font(.system(size: 14, weight: .medium))
+                    .foregroundColor(.white)
+                    .lineLimit(2)
+                    .multilineTextAlignment(.leading)
+                    .frame(width: 120, alignment: .leading)
+                
+                // Calificación
+                HStack {
+                    Image(systemName: "star.fill")
+                        .foregroundColor(.yellow)
+                        .font(.caption)
+                    Text(String(format: "%.1f", movie.voteAverage))
+                        .font(.caption)
+                        .foregroundColor(.white)
+                }
+            }
+        }
+        .onTapGesture {
+            onTap()
+        }
+    }
+}
+
 // MARK: - Movie Card Preview
 struct MovieCard_Previews: PreviewProvider {
     static var previews: some View {
