@@ -1,7 +1,7 @@
 import SwiftUI
 
 // MARK: - Main Home View
-struct HomeView: View {
+struct homeView: View {
     @StateObject private var nowPlayingViewModel = MovieViewModel()
     @StateObject private var upcomingViewModel = MovieViewModel()
     @StateObject private var topRatedViewModel = MovieViewModel()

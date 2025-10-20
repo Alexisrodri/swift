@@ -132,7 +132,6 @@ struct MovieCardVertical: View {
 // MARK: - Movie Card Horizontal Component
 struct MovieCardHorizontal: View {
     let movie: Movie
-    let onTap: () -> Void
     
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -192,9 +191,6 @@ struct MovieCardHorizontal: View {
                         .foregroundColor(.secondary)
                 }
             }
-        }
-        .onTapGesture {
-            onTap()
         }
     }
 }

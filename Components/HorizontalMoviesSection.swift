@@ -34,9 +34,7 @@ struct HorizontalMoviesSection: View {
                 LazyHStack(spacing: 12) {
                     ForEach(movies) { movie in
                         NavigationLink(destination: MovieDetailView(movie: movie)) {
-                            MovieCardHorizontal(movie: movie) {
-                                // Tap manejado por NavigationLink
-                            }
+                            MovieCardHorizontal(movie: movie)
                         }
                         .buttonStyle(PlainButtonStyle())
                         .onAppear {
