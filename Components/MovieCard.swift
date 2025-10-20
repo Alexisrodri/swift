@@ -168,8 +168,8 @@ struct MovieCardHorizontal: View {
                 }
             }
             .frame(width: 120, height: 180)
-            .cornerRadius(12)
             .clipped()
+            .cornerRadius(12)
             
             // Información de la película
             VStack(alignment: .leading, spacing: 4) {
