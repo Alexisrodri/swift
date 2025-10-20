@@ -81,7 +81,7 @@ struct MovieDetailView: View {
                     )
                 }
                 
-                // Contenido principal
+                // Contenido principal con padding adicional
                 VStack(spacing: 40) {
                     // Sinopsis
                     VStack(spacing: 20) {
@@ -97,7 +97,7 @@ struct MovieDetailView: View {
                             .multilineTextAlignment(.leading)
                             .frame(maxWidth: .infinity, alignment: .leading)
                     }
-                    .padding(.horizontal, 24)
+                    .padding(.horizontal, 20)
                     .padding(.top, 40)
                     
                     // Estadísticas en columna
@@ -123,10 +123,11 @@ struct MovieDetailView: View {
                             color: .green
                         )
                     }
-                    .padding(.horizontal, 24)
+                    .padding(.horizontal, 20)
                     
                     Spacer(minLength: 50)
                 }
+                .padding(.horizontal, 16) // Padding adicional al contenedor principal
             }
         }
         .navigationBarTitleDisplayMode(.inline)
