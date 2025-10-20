@@ -1,6 +1,6 @@
 import SwiftUI
 
-// MARK: - Movie Card Component
+// MARK: - Movie Card Component (Horizontal)
 struct MovieCard: View {
     let movie: Movie
     let onTap: () -> Void
@@ -33,6 +33,78 @@ struct MovieCard: View {
                 .multilineTextAlignment(.leading)
                 .frame(width: 150, alignment: .leading)
         }
+        .onTapGesture {
+            onTap()
+        }
+    }
+}
+
+// MARK: - Movie Card Vertical Component
+struct MovieCardVertical: View {
+    let movie: Movie
+    let onTap: () -> Void
+    
+    var body: some View {
+        HStack(spacing: 12) {
+            // Imagen de la película
+            AsyncImage(url: URL(string: movie.posterURL)) { image in
+                image
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+            } placeholder: {
+                Rectangle()
+                    .fill(Color.gray.opacity(0.3))
+                    .overlay(
+                        Image(systemName: "photo")
+                            .foregroundColor(.gray)
+                            .font(.title2)
+                    )
+            }
+            .frame(width: 80, height: 120)
+            .cornerRadius(8)
+            .clipped()
+            
+            // Información de la película
+            VStack(alignment: .leading, spacing: 8) {
+                // Título
+                Text(movie.title)
+                    .font(.system(size: 16, weight: .semibold))
+                    .foregroundColor(.primary)
+                    .lineLimit(2)
+                    .multilineTextAlignment(.leading)
+                
+                // Calificación
+                HStack {
+                    Image(systemName: "star.fill")
+                        .foregroundColor(.yellow)
+                        .font(.caption)
+                    Text(String(format: "%.1f", movie.voteAverage))
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                }
+                
+                // Fecha de estreno
+                Text(movie.releaseDate)
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+                
+                // Sinopsis (truncada)
+                Text(movie.overview)
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+                    .lineLimit(3)
+                    .multilineTextAlignment(.leading)
+                
+                Spacer()
+            }
+            
+            Spacer()
+        }
+        .padding(.vertical, 8)
+        .padding(.horizontal, 12)
+        .background(Color(.systemBackground))
+        .cornerRadius(12)
+        .shadow(color: Color.black.opacity(0.1), radius: 2, x: 0, y: 1)
         .onTapGesture {
             onTap()
         }
