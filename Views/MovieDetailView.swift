@@ -82,9 +82,9 @@ struct MovieDetailView: View {
                 }
                 
                 // Contenido principal
-                VStack(alignment: .leading, spacing: 32) {
+                VStack(spacing: 40) {
                     // Sinopsis
-                    VStack(alignment: .leading, spacing: 16) {
+                    VStack(spacing: 20) {
                         Text("Sinopsis")
                             .font(.title2)
                             .fontWeight(.bold)
@@ -93,13 +93,14 @@ struct MovieDetailView: View {
                         Text(movie.overview)
                             .font(.body)
                             .foregroundColor(.secondary)
-                            .lineSpacing(6)
+                            .lineSpacing(8)
+                            .multilineTextAlignment(.center)
                     }
-                    .padding(.horizontal, 24)
-                    .padding(.top, 32)
+                    .padding(.horizontal, 32)
+                    .padding(.top, 40)
                     
                     // Estadísticas en columna
-                    VStack(spacing: 20) {
+                    VStack(spacing: 24) {
                         StatCard(
                             icon: "star.fill",
                             title: "Calificación",
@@ -121,21 +122,13 @@ struct MovieDetailView: View {
                             color: .green
                         )
                     }
-                    .padding(.horizontal, 24)
+                    .padding(.horizontal, 32)
                     
                     Spacer(minLength: 50)
                 }
             }
         }
         .navigationBarTitleDisplayMode(.inline)
-        .toolbar {
-            ToolbarItem(placement: .navigationBarTrailing) {
-                Button("Cerrar") {
-                    presentationMode.wrappedValue.dismiss()
-                }
-                .foregroundColor(.primary)
-            }
-        }
     }
 }
 
@@ -147,29 +140,27 @@ struct StatCard: View {
     let color: Color
     
     var body: some View {
-        HStack(spacing: 16) {
+        VStack(spacing: 12) {
             Image(systemName: icon)
-                .font(.title2)
+                .font(.title)
                 .foregroundColor(color)
-                .frame(width: 30)
             
-            VStack(alignment: .leading, spacing: 4) {
+            VStack(spacing: 6) {
                 Text(title)
                     .font(.subheadline)
                     .foregroundColor(.secondary)
                 
                 Text(value)
-                    .font(.title3)
+                    .font(.title2)
                     .fontWeight(.bold)
                     .foregroundColor(.primary)
             }
-            
-            Spacer()
         }
+        .frame(maxWidth: .infinity)
+        .padding(.vertical, 24)
         .padding(.horizontal, 20)
-        .padding(.vertical, 16)
         .background(Color(.systemGray6))
-        .cornerRadius(16)
+        .cornerRadius(20)
     }
 }
 
