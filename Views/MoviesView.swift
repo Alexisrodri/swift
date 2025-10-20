@@ -11,19 +11,26 @@ struct HeroCarouselView: View {
                 AsyncImage(url: URL(string: movie.backdropURL)) { image in
                     image
                         .resizable()
-                        .aspectRatio(contentMode: .fill)
+                        .aspectRatio(contentMode: .fit)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
                 } placeholder: {
                     Rectangle()
-                        .fill(Color.gray.opacity(0.3))
+                        .fill(Color.gray.opacity(0.2))
+                        .overlay(
+                            ProgressView()
+                                .scaleEffect(1.5)
+                        )
                 }
-                .frame(height: 300)
+                .frame(height: 250)
                 .clipped()
+                .cornerRadius(16)
                 .overlay(
                     LinearGradient(
-                        gradient: Gradient(colors: [Color.clear, Color.black.opacity(0.7)]),
+                        gradient: Gradient(colors: [Color.clear, Color.black.opacity(0.6)]),
                         startPoint: .top,
                         endPoint: .bottom
                     )
+                    .cornerRadius(16)
                 )
                 .overlay(
                     VStack {
@@ -35,6 +42,7 @@ struct HeroCarouselView: View {
                                     .fontWeight(.bold)
                                     .foregroundColor(.white)
                                     .lineLimit(2)
+                                    .shadow(color: .black, radius: 2)
                                 
                                 HStack {
                                     Image(systemName: "star.fill")
@@ -42,6 +50,7 @@ struct HeroCarouselView: View {
                                     Text(String(format: "%.1f", movie.voteAverage))
                                         .foregroundColor(.white)
                                         .fontWeight(.medium)
+                                        .shadow(color: .black, radius: 2)
                                 }
                             }
                             Spacer()
@@ -49,14 +58,16 @@ struct HeroCarouselView: View {
                         .padding()
                     }
                 )
-                .onTapGesture {
-                    onMovieTap(movie)
-                }
+                .overlay(
+                    NavigationLink(destination: MovieDetailView(movie: movie)) {
+                        Color.clear
+                    }
+                )
             }
         }
         .tabViewStyle(PageTabViewStyle(indexDisplayMode: .automatic))
-        .frame(height: 300)
-        .cornerRadius(0)
+        .frame(height: 250)
+        .padding(.horizontal, 16)
     }
 }
 
@@ -74,7 +85,7 @@ struct HorizontalMoviesSection: View {
                 Text(title)
                     .font(.title3)
                     .fontWeight(.bold)
-                    .foregroundColor(.white)
+                    .foregroundColor(.primary)
                 
                 Spacer()
                 
@@ -82,10 +93,10 @@ struct HorizontalMoviesSection: View {
                     onLoadMore()
                 }
                 .font(.caption)
-                .foregroundColor(.gray)
+                .foregroundColor(.blue)
                 .padding(.horizontal, 12)
                 .padding(.vertical, 6)
-                .background(Color.gray.opacity(0.2))
+                .background(Color.blue.opacity(0.1))
                 .cornerRadius(12)
             }
             .padding(.horizontal, 16)
@@ -94,9 +105,12 @@ struct HorizontalMoviesSection: View {
             ScrollView(.horizontal, showsIndicators: false) {
                 LazyHStack(spacing: 12) {
                     ForEach(movies) { movie in
-                        MovieCardHorizontal(movie: movie) {
-                            onMovieTap(movie)
+                        NavigationLink(destination: MovieDetailView(movie: movie)) {
+                            MovieCardHorizontal(movie: movie) {
+                                // Tap manejado por NavigationLink
+                            }
                         }
+                        .buttonStyle(PlainButtonStyle())
                         .onAppear {
                             if movie.id == movies.last?.id {
                                 onLoadMore()
@@ -116,44 +130,24 @@ struct HomeView: View {
     @StateObject private var upcomingViewModel = MovieViewModel()
     @StateObject private var topRatedViewModel = MovieViewModel()
     
-    @State private var selectedMovie: Movie?
-    @State private var showingMovieDetail = false
     @State private var selectedTab = 0
     
     var body: some View {
         NavigationView {
             ZStack {
-                // Fondo con gradiente
-                LinearGradient(
-                    gradient: Gradient(colors: [
-                        Color.blue.opacity(0.8),
-                        Color.purple.opacity(0.6),
-                        Color.black
-                    ]),
-                    startPoint: .topLeading,
-                    endPoint: .bottomTrailing
-                )
-                .ignoresSafeArea()
+                // Fondo blanco
+                Color.white
+                    .ignoresSafeArea()
                 
                 VStack(spacing: 0) {
                     // App Bar
                     HStack {
-                        HStack {
-                            Image(systemName: "film")
-                                .foregroundColor(.white)
-                            Text("MoviesApp")
-                                .font(.title2)
-                                .fontWeight(.bold)
-                                .foregroundColor(.white)
-                        }
+                        Text("MoviesApp")
+                            .font(.title2)
+                            .fontWeight(.bold)
+                            .foregroundColor(.primary)
                         
                         Spacer()
-                        
-                        Button(action: {}) {
-                            Image(systemName: "magnifyingglass")
-                                .foregroundColor(.white)
-                                .font(.title3)
-                        }
                     }
                     .padding(.horizontal, 16)
                     .padding(.vertical, 12)
@@ -166,8 +160,7 @@ struct HomeView: View {
                                 HeroCarouselView(
                                     movies: nowPlayingViewModel.movies,
                                     onMovieTap: { movie in
-                                        selectedMovie = movie
-                                        showingMovieDetail = true
+                                        // NavigationLink se manejará en el componente
                                     }
                                 )
                             }
@@ -177,8 +170,7 @@ struct HomeView: View {
                                 title: "En Cartelera",
                                 movies: nowPlayingViewModel.movies,
                                 onMovieTap: { movie in
-                                    selectedMovie = movie
-                                    showingMovieDetail = true
+                                    // NavigationLink se manejará en el componente
                                 },
                                 onLoadMore: {
                                     nowPlayingViewModel.loadMoreMovies(category: .nowPlaying)
@@ -190,8 +182,7 @@ struct HomeView: View {
                                 title: "Próximamente",
                                 movies: upcomingViewModel.movies,
                                 onMovieTap: { movie in
-                                    selectedMovie = movie
-                                    showingMovieDetail = true
+                                    // NavigationLink se manejará en el componente
                                 },
                                 onLoadMore: {
                                     upcomingViewModel.loadMoreMovies(category: .upcoming)
@@ -203,8 +194,7 @@ struct HomeView: View {
                                 title: "Mejor Valoradas",
                                 movies: topRatedViewModel.movies,
                                 onMovieTap: { movie in
-                                    selectedMovie = movie
-                                    showingMovieDetail = true
+                                    // NavigationLink se manejará en el componente
                                 },
                                 onLoadMore: {
                                     topRatedViewModel.loadMoreMovies(category: .topRated)
@@ -229,11 +219,6 @@ struct HomeView: View {
                 nowPlayingViewModel.loadMovies(category: .nowPlaying)
                 upcomingViewModel.loadMovies(category: .upcoming)
                 topRatedViewModel.loadMovies(category: .topRated)
-            }
-            .sheet(isPresented: $showingMovieDetail) {
-                if let movie = selectedMovie {
-                    MovieDetailView(movie: movie)
-                }
             }
         }
     }

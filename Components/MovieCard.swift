@@ -141,7 +141,7 @@ struct MovieCardHorizontal: View {
                 // Título
                 Text(movie.title)
                     .font(.system(size: 14, weight: .medium))
-                    .foregroundColor(.white)
+                    .foregroundColor(.primary)
                     .lineLimit(2)
                     .multilineTextAlignment(.leading)
                     .frame(width: 120, alignment: .leading)
@@ -153,7 +153,7 @@ struct MovieCardHorizontal: View {
                         .font(.caption)
                     Text(String(format: "%.1f", movie.voteAverage))
                         .font(.caption)
-                        .foregroundColor(.white)
+                        .foregroundColor(.secondary)
                 }
             }
         }
