@@ -47,7 +47,8 @@ struct MovieDetailView: View {
                             .foregroundColor(.white)
                             .shadow(color: .black, radius: 3)
                             .lineLimit(3)
-                        
+                            .multilineTextAlignment(.leading)
+
                         HStack(spacing: 16) {
                             HStack {
                                 Image(systemName: "star.fill")
@@ -71,7 +72,8 @@ struct MovieDetailView: View {
                         }
                         .shadow(color: .black, radius: 2)
                     }
-                    .padding()
+                    .padding(.horizontal, 24)
+                    .padding(.bottom, 24)
                     .background(
                         LinearGradient(
                             gradient: Gradient(colors: [Color.clear, Color.black.opacity(0.8)]),
@@ -97,7 +99,7 @@ struct MovieDetailView: View {
                             .multilineTextAlignment(.leading)
                             .frame(maxWidth: .infinity, alignment: .leading)
                     }
-                    .padding(.horizontal, 20)
+                    .padding(.horizontal, 16)
                     .padding(.top, 40)
                     
                     // Estadísticas en columna
@@ -123,7 +125,7 @@ struct MovieDetailView: View {
                             color: .green
                         )
                     }
-                    .padding(.horizontal, 20)
+                    .padding(.horizontal, 16)
                     
                     Spacer(minLength: 50)
                 }
