@@ -40,8 +40,8 @@ struct HeroCarouselView: View {
                     }
                 }
                 .frame(height: 250)
-                .clipped()
                 .cornerRadius(16)
+                .clipped()
                 .overlay(
                     LinearGradient(
                         gradient: Gradient(colors: [Color.clear, Color.black.opacity(0.6)]),

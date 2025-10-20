@@ -48,6 +48,7 @@ struct MovieDetailView: View {
                             .shadow(color: .black, radius: 3)
                             .lineLimit(3)
                             .multilineTextAlignment(.leading)
+                            .frame(maxWidth: .infinity, alignment: .leading)
 
                         HStack(spacing: 16) {
                             HStack {
@@ -72,6 +73,7 @@ struct MovieDetailView: View {
                         }
                         .shadow(color: .black, radius: 2)
                     }
+                    .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.horizontal, 24)
                     .padding(.bottom, 24)
                     .background(
