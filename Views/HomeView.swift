@@ -40,21 +40,13 @@ struct HomeView: View {
                             VStack(spacing: 32) {
                                 // Hero Carousel
                                 if !nowPlayingViewModel.movies.isEmpty {
-                                    HeroCarouselView(
-                                        movies: nowPlayingViewModel.movies,
-                                        onMovieTap: { movie in
-                                            // NavigationLink se manejará en el componente
-                                        }
-                                    )
+                                    HeroCarouselView(movies: nowPlayingViewModel.movies)
                                 }
                                 
                                 // Sección En Cartelera
                                 HorizontalMoviesSection(
                                     title: "En Cartelera",
                                     movies: nowPlayingViewModel.movies,
-                                    onMovieTap: { movie in
-                                        // NavigationLink se manejará en el componente
-                                    },
                                     onLoadMore: {
                                         nowPlayingViewModel.loadMoreMovies(category: .nowPlaying)
                                     }
@@ -64,9 +56,6 @@ struct HomeView: View {
                                 HorizontalMoviesSection(
                                     title: "Próximamente",
                                     movies: upcomingViewModel.movies,
-                                    onMovieTap: { movie in
-                                        // NavigationLink se manejará en el componente
-                                    },
                                     onLoadMore: {
                                         upcomingViewModel.loadMoreMovies(category: .upcoming)
                                     }
@@ -76,9 +65,6 @@ struct HomeView: View {
                                 HorizontalMoviesSection(
                                     title: "Mejor Valoradas",
                                     movies: topRatedViewModel.movies,
-                                    onMovieTap: { movie in
-                                        // NavigationLink se manejará en el componente
-                                    },
                                     onLoadMore: {
                                         topRatedViewModel.loadMoreMovies(category: .topRated)
                                     }

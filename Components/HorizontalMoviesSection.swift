@@ -4,7 +4,6 @@ import SwiftUI
 struct HorizontalMoviesSection: View {
     let title: String
     let movies: [Movie]
-    let onMovieTap: (Movie) -> Void
     let onLoadMore: () -> Void
     
     var body: some View {

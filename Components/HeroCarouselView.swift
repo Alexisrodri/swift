@@ -3,7 +3,6 @@ import SwiftUI
 // MARK: - Hero Carousel View
 struct HeroCarouselView: View {
     let movies: [Movie]
-    let onMovieTap: (Movie) -> Void
     
     var body: some View {
         TabView {
