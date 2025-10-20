@@ -6,115 +6,171 @@ struct MovieDetailView: View {
     @Environment(\.presentationMode) var presentationMode
     
     var body: some View {
-        NavigationView {
-            ScrollView {
-                VStack(alignment: .leading, spacing: 20) {
-                    // Header con imagen de fondo
-                    ZStack(alignment: .bottomLeading) {
-                        AsyncImage(url: URL(string: movie.backdropURL)) { image in
+        ScrollView {
+            VStack(spacing: 0) {
+                // Header con imagen de fondo
+                ZStack(alignment: .bottomLeading) {
+                    AsyncImage(url: URL(string: movie.backdropURL)) { phase in
+                        switch phase {
+                        case .success(let image):
                             image
                                 .resizable()
                                 .aspectRatio(contentMode: .fill)
-                        } placeholder: {
+                        case .failure(_):
+                            Rectangle()
+                                .fill(Color.gray.opacity(0.3))
+                                .overlay(
+                                    Image(systemName: "photo")
+                                        .font(.largeTitle)
+                                        .foregroundColor(.gray)
+                                )
+                        case .empty:
+                            Rectangle()
+                                .fill(Color.gray.opacity(0.3))
+                                .overlay(
+                                    ProgressView()
+                                        .scaleEffect(1.5)
+                                )
+                        @unknown default:
                             Rectangle()
                                 .fill(Color.gray.opacity(0.3))
                         }
-                        .frame(height: 250)
-                        .clipped()
+                    }
+                    .frame(height: 300)
+                    .clipped()
+                    
+                    // Overlay con información
+                    VStack(alignment: .leading, spacing: 12) {
+                        Text(movie.title)
+                            .font(.largeTitle)
+                            .fontWeight(.bold)
+                            .foregroundColor(.white)
+                            .shadow(color: .black, radius: 3)
+                            .lineLimit(3)
                         
-                        // Overlay con información
-                        VStack(alignment: .leading, spacing: 8) {
-                            Text(movie.title)
-                                .font(.title)
-                                .fontWeight(.bold)
-                                .foregroundColor(.white)
-                                .shadow(color: .black, radius: 2)
-                            
+                        HStack(spacing: 16) {
                             HStack {
                                 Image(systemName: "star.fill")
                                     .foregroundColor(.yellow)
                                 Text(String(format: "%.1f", movie.voteAverage))
                                     .foregroundColor(.white)
-                                    .fontWeight(.medium)
-                                
-                                Spacer()
-                                
-                                Text(movie.releaseDate)
-                                    .foregroundColor(.white)
-                                    .font(.caption)
+                                    .fontWeight(.semibold)
                             }
-                            .shadow(color: .black, radius: 2)
+                            .padding(.horizontal, 12)
+                            .padding(.vertical, 6)
+                            .background(Color.black.opacity(0.6))
+                            .cornerRadius(20)
+                            
+                            Text(movie.releaseDate)
+                                .foregroundColor(.white)
+                                .font(.subheadline)
+                                .padding(.horizontal, 12)
+                                .padding(.vertical, 6)
+                                .background(Color.black.opacity(0.6))
+                                .cornerRadius(20)
                         }
-                        .padding()
-                        .background(
-                            LinearGradient(
-                                gradient: Gradient(colors: [Color.clear, Color.black.opacity(0.7)]),
-                                startPoint: .top,
-                                endPoint: .bottom
-                            )
-                        )
+                        .shadow(color: .black, radius: 2)
                     }
-                    
+                    .padding()
+                    .background(
+                        LinearGradient(
+                            gradient: Gradient(colors: [Color.clear, Color.black.opacity(0.8)]),
+                            startPoint: .top,
+                            endPoint: .bottom
+                        )
+                    )
+                }
+                
+                // Contenido principal
+                VStack(alignment: .leading, spacing: 24) {
                     // Información adicional
                     VStack(alignment: .leading, spacing: 16) {
                         // Sinopsis
-                        VStack(alignment: .leading, spacing: 8) {
+                        VStack(alignment: .leading, spacing: 12) {
                             Text("Sinopsis")
-                                .font(.headline)
-                                .fontWeight(.semibold)
+                                .font(.title2)
+                                .fontWeight(.bold)
+                                .foregroundColor(.primary)
                             
                             Text(movie.overview)
                                 .font(.body)
                                 .foregroundColor(.secondary)
-                                .lineSpacing(4)
+                                .lineSpacing(6)
                         }
                         
-                        // Estadísticas
-                        HStack(spacing: 20) {
-                            VStack(alignment: .leading) {
-                                Text("Calificación")
-                                    .font(.caption)
-                                    .foregroundColor(.secondary)
-                                Text(String(format: "%.1f/10", movie.voteAverage))
-                                    .font(.title2)
-                                    .fontWeight(.bold)
-                            }
+                        // Estadísticas en cards
+                        LazyVGrid(columns: [
+                            GridItem(.flexible()),
+                            GridItem(.flexible()),
+                            GridItem(.flexible())
+                        ], spacing: 16) {
+                            StatCard(
+                                icon: "star.fill",
+                                title: "Calificación",
+                                value: String(format: "%.1f/10", movie.voteAverage),
+                                color: .yellow
+                            )
                             
-                            VStack(alignment: .leading) {
-                                Text("Votos")
-                                    .font(.caption)
-                                    .foregroundColor(.secondary)
-                                Text("\(movie.voteCount)")
-                                    .font(.title2)
-                                    .fontWeight(.bold)
-                            }
+                            StatCard(
+                                icon: "person.3.fill",
+                                title: "Votos",
+                                value: "\(movie.voteCount)",
+                                color: .blue
+                            )
                             
-                            VStack(alignment: .leading) {
-                                Text("Fecha")
-                                    .font(.caption)
-                                    .foregroundColor(.secondary)
-                                Text(movie.releaseDate)
-                                    .font(.title2)
-                                    .fontWeight(.bold)
-                            }
-                            
-                            Spacer()
+                            StatCard(
+                                icon: "calendar",
+                                title: "Estreno",
+                                value: movie.releaseDate,
+                                color: .green
+                            )
                         }
                     }
-                    .padding(.horizontal, 16)
+                    .padding(.horizontal, 20)
+                    .padding(.top, 24)
                     
                     Spacer(minLength: 50)
                 }
             }
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Cerrar") {
-                        presentationMode.wrappedValue.dismiss()
-                    }
+        }
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button("Cerrar") {
+                    presentationMode.wrappedValue.dismiss()
                 }
+                .foregroundColor(.primary)
             }
         }
+    }
+}
+
+// MARK: - Stat Card Component
+struct StatCard: View {
+    let icon: String
+    let title: String
+    let value: String
+    let color: Color
+    
+    var body: some View {
+        VStack(spacing: 8) {
+            Image(systemName: icon)
+                .font(.title2)
+                .foregroundColor(color)
+            
+            Text(value)
+                .font(.headline)
+                .fontWeight(.bold)
+                .foregroundColor(.primary)
+            
+            Text(title)
+                .font(.caption)
+                .foregroundColor(.secondary)
+                .multilineTextAlignment(.center)
+        }
+        .padding()
+        .background(Color(.systemGray6))
+        .cornerRadius(12)
     }
 }
 
