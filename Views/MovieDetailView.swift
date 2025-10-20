@@ -82,52 +82,46 @@ struct MovieDetailView: View {
                 }
                 
                 // Contenido principal
-                VStack(alignment: .leading, spacing: 24) {
-                    // Información adicional
+                VStack(alignment: .leading, spacing: 32) {
+                    // Sinopsis
                     VStack(alignment: .leading, spacing: 16) {
-                        // Sinopsis
-                        VStack(alignment: .leading, spacing: 12) {
-                            Text("Sinopsis")
-                                .font(.title2)
-                                .fontWeight(.bold)
-                                .foregroundColor(.primary)
-                            
-                            Text(movie.overview)
-                                .font(.body)
-                                .foregroundColor(.secondary)
-                                .lineSpacing(6)
-                        }
+                        Text("Sinopsis")
+                            .font(.title2)
+                            .fontWeight(.bold)
+                            .foregroundColor(.primary)
                         
-                        // Estadísticas en cards
-                        LazyVGrid(columns: [
-                            GridItem(.flexible()),
-                            GridItem(.flexible()),
-                            GridItem(.flexible())
-                        ], spacing: 16) {
-                            StatCard(
-                                icon: "star.fill",
-                                title: "Calificación",
-                                value: String(format: "%.1f/10", movie.voteAverage),
-                                color: .yellow
-                            )
-                            
-                            StatCard(
-                                icon: "person.3.fill",
-                                title: "Votos",
-                                value: "\(movie.voteCount)",
-                                color: .blue
-                            )
-                            
-                            StatCard(
-                                icon: "calendar",
-                                title: "Estreno",
-                                value: movie.releaseDate,
-                                color: .green
-                            )
-                        }
+                        Text(movie.overview)
+                            .font(.body)
+                            .foregroundColor(.secondary)
+                            .lineSpacing(6)
                     }
-                    .padding(.horizontal, 20)
-                    .padding(.top, 24)
+                    .padding(.horizontal, 24)
+                    .padding(.top, 32)
+                    
+                    // Estadísticas en columna
+                    VStack(spacing: 20) {
+                        StatCard(
+                            icon: "star.fill",
+                            title: "Calificación",
+                            value: String(format: "%.1f/10", movie.voteAverage),
+                            color: .yellow
+                        )
+                        
+                        StatCard(
+                            icon: "person.3.fill",
+                            title: "Votos",
+                            value: "\(movie.voteCount)",
+                            color: .blue
+                        )
+                        
+                        StatCard(
+                            icon: "calendar",
+                            title: "Estreno",
+                            value: movie.releaseDate,
+                            color: .green
+                        )
+                    }
+                    .padding(.horizontal, 24)
                     
                     Spacer(minLength: 50)
                 }
@@ -153,24 +147,29 @@ struct StatCard: View {
     let color: Color
     
     var body: some View {
-        VStack(spacing: 8) {
+        HStack(spacing: 16) {
             Image(systemName: icon)
                 .font(.title2)
                 .foregroundColor(color)
+                .frame(width: 30)
             
-            Text(value)
-                .font(.headline)
-                .fontWeight(.bold)
-                .foregroundColor(.primary)
+            VStack(alignment: .leading, spacing: 4) {
+                Text(title)
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+                
+                Text(value)
+                    .font(.title3)
+                    .fontWeight(.bold)
+                    .foregroundColor(.primary)
+            }
             
-            Text(title)
-                .font(.caption)
-                .foregroundColor(.secondary)
-                .multilineTextAlignment(.center)
+            Spacer()
         }
-        .padding()
+        .padding(.horizontal, 20)
+        .padding(.vertical, 16)
         .background(Color(.systemGray6))
-        .cornerRadius(12)
+        .cornerRadius(16)
     }
 }
 
