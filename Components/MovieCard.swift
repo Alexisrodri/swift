@@ -47,18 +47,36 @@ struct MovieCardVertical: View {
     var body: some View {
         HStack(spacing: 12) {
             // Imagen de la película
-            AsyncImage(url: URL(string: movie.posterURL)) { image in
-                image
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-            } placeholder: {
-                Rectangle()
-                    .fill(Color.gray.opacity(0.3))
-                    .overlay(
-                        Image(systemName: "photo")
-                            .foregroundColor(.gray)
-                            .font(.title2)
-                    )
+            AsyncImage(url: URL(string: movie.posterURL)) { phase in
+                switch phase {
+                case .success(let image):
+                    image
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
+                case .failure(_):
+                    Rectangle()
+                        .fill(Color.gray.opacity(0.3))
+                        .overlay(
+                            VStack(spacing: 4) {
+                                Image(systemName: "photo")
+                                    .foregroundColor(.gray)
+                                    .font(.title2)
+                                Text("Error")
+                                    .font(.caption2)
+                                    .foregroundColor(.gray)
+                            }
+                        )
+                case .empty:
+                    Rectangle()
+                        .fill(Color.gray.opacity(0.3))
+                        .overlay(
+                            ProgressView()
+                                .scaleEffect(0.8)
+                        )
+                @unknown default:
+                    Rectangle()
+                        .fill(Color.gray.opacity(0.3))
+                }
             }
             .frame(width: 80, height: 120)
             .cornerRadius(8)
@@ -119,18 +137,36 @@ struct MovieCardHorizontal: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             // Imagen de la película
-            AsyncImage(url: URL(string: movie.posterURL)) { image in
-                image
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-            } placeholder: {
-                Rectangle()
-                    .fill(Color.gray.opacity(0.3))
-                    .overlay(
-                        Image(systemName: "photo")
-                            .foregroundColor(.gray)
-                            .font(.title2)
-                    )
+            AsyncImage(url: URL(string: movie.posterURL)) { phase in
+                switch phase {
+                case .success(let image):
+                    image
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
+                case .failure(_):
+                    Rectangle()
+                        .fill(Color.gray.opacity(0.3))
+                        .overlay(
+                            VStack(spacing: 4) {
+                                Image(systemName: "photo")
+                                    .foregroundColor(.gray)
+                                    .font(.title2)
+                                Text("Error")
+                                    .font(.caption2)
+                                    .foregroundColor(.gray)
+                            }
+                        )
+                case .empty:
+                    Rectangle()
+                        .fill(Color.gray.opacity(0.3))
+                        .overlay(
+                            ProgressView()
+                                .scaleEffect(0.8)
+                        )
+                @unknown default:
+                    Rectangle()
+                        .fill(Color.gray.opacity(0.3))
+                }
             }
             .frame(width: 120, height: 180)
             .cornerRadius(12)
