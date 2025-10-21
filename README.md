@@ -1,5 +1,7 @@
 # 🎬 MoviesApp
 
+https://docs.google.com/document/d/117oqEANRJr-TjvX4WdHoxg9A0LndPeyX6sSawH46K10/edit?usp=sharing
+
 Una aplicación de películas desarrollada en SwiftUI que utiliza la API de TheMovieDB.
 
 ## ✨ Características
