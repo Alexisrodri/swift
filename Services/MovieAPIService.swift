@@ -11,6 +11,7 @@ enum APIError: Error, LocalizedError {
     case invalidAPIKey
     case rateLimitExceeded
     case parseResponseError
+    case connectionLost
     
     var errorDescription: String? {
         switch self {
@@ -30,6 +31,8 @@ enum APIError: Error, LocalizedError {
             return "Límite de solicitudes excedido. Intenta más tarde."
         case .parseResponseError:
             return "Error al procesar la respuesta del servidor. Intenta nuevamente."
+        case .connectionLost:
+            return "Conexión perdida. Verifica tu conexión a internet."
         }
     }
 }
@@ -97,6 +100,10 @@ class MovieAPIService: ObservableObject {
                     if urlError.code == .cannotParseResponse {
                         return APIError.parseResponseError
                     }
+                    // Detectar específicamente el error -1005 (pérdida de conexión)
+                    if urlError.code == .networkConnectionLost {
+                        return APIError.connectionLost
+                    }
                     return APIError.networkError(error)
                 } else {
                     return APIError.networkError(error)
@@ -160,6 +167,10 @@ class MovieAPIService: ObservableObject {
                     if urlError.code == .cannotParseResponse {
                         return APIError.parseResponseError
                     }
+                    // Detectar específicamente el error -1005 (pérdida de conexión)
+                    if urlError.code == .networkConnectionLost {
+                        return APIError.connectionLost
+                    }
                     return APIError.networkError(error)
                 } else {
                     return APIError.networkError(error)
@@ -178,6 +189,7 @@ class MovieViewModel: ObservableObject {
     @Published var currentPage = 1
     @Published var totalPages = 1
     @Published var hasError = false
+    @Published var isRetrying = false
     
     private let apiService = MovieAPIService.shared
     private var cancellables = Set<AnyCancellable>()
@@ -200,6 +212,7 @@ class MovieViewModel: ObservableObject {
                 receiveValue: { [weak self] response in
                     self?.hasError = false
                     self?.retryCount = 0 // Reset retry count on success
+                    self?.isRetrying = false // Reset retry indicator on success
                     if page == 1 {
                         self?.movies = response.results
                     } else {
@@ -215,11 +228,14 @@ class MovieViewModel: ObservableObject {
     private func handleError(error: Error, category: MovieCategory, page: Int) {
         if let apiError = error as? APIError {
             switch apiError {
-            case .parseResponseError:
-                // Retry automático para errores de parseo
+            case .parseResponseError, .connectionLost:
+                // Retry automático para errores de parseo y pérdida de conexión
                 if retryCount < maxRetries {
                     retryCount += 1
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                    isRetrying = true
+                    let delay: Double = apiError == .connectionLost ? 2.0 : 1.0 // Más tiempo para conexión perdida
+                    DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
+                        self.isRetrying = false
                         self.loadMovies(category: category, page: page)
                     }
                     return
@@ -232,6 +248,7 @@ class MovieViewModel: ObservableObject {
             self.errorMessage = error.localizedDescription
         }
         self.hasError = true
+        self.isRetrying = false
     }
     
     func loadMoreMovies(category: MovieCategory) {
@@ -242,6 +259,7 @@ class MovieViewModel: ObservableObject {
     func refreshMovies(category: MovieCategory) {
         currentPage = 1
         retryCount = 0
+        isRetrying = false
         loadMovies(category: category, page: 1)
     }
     
@@ -249,6 +267,7 @@ class MovieViewModel: ObservableObject {
         hasError = false
         errorMessage = nil
         retryCount = 0
+        isRetrying = false
         refreshMovies(category: category)
     }
 }
