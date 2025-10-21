@@ -2,7 +2,7 @@ import Foundation
 import Combine
 
 // MARK: - API Error Types
-enum APIError: Error, LocalizedError {
+enum APIError: Error, LocalizedError, Equatable {
     case invalidURL
     case noData
     case decodingError
@@ -33,6 +33,26 @@ enum APIError: Error, LocalizedError {
             return "Error al procesar la respuesta del servidor. Intenta nuevamente."
         case .connectionLost:
             return "Conexión perdida. Verifica tu conexión a internet."
+        }
+    }
+    
+    // MARK: - Equatable Implementation
+    static func == (lhs: APIError, rhs: APIError) -> Bool {
+        switch (lhs, rhs) {
+        case (.invalidURL, .invalidURL),
+             (.noData, .noData),
+             (.decodingError, .decodingError),
+             (.invalidAPIKey, .invalidAPIKey),
+             (.rateLimitExceeded, .rateLimitExceeded),
+             (.parseResponseError, .parseResponseError),
+             (.connectionLost, .connectionLost):
+            return true
+        case (.serverError(let lhsCode), .serverError(let rhsCode)):
+            return lhsCode == rhsCode
+        case (.networkError(let lhsError), .networkError(let rhsError)):
+            return lhsError.localizedDescription == rhsError.localizedDescription
+        default:
+            return false
         }
     }
 }
