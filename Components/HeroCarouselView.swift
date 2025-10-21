@@ -15,9 +15,13 @@ struct HeroCarouselView: View {
                                 .resizable()
                                 .aspectRatio(contentMode: .fill)
                                 .frame(maxWidth: .infinity, maxHeight: .infinity)
+                                .cornerRadius(16)
+                                .clipped()
                         case .failure(_):
                             Rectangle()
                                 .fill(Color.gray.opacity(0.2))
+                                .cornerRadius(16)
+                                .clipped()
                                 .overlay(
                                     VStack(spacing: 8) {
                                         Image(systemName: "photo")
@@ -31,6 +35,8 @@ struct HeroCarouselView: View {
                         case .empty:
                             Rectangle()
                                 .fill(Color.gray.opacity(0.2))
+                                .cornerRadius(16)
+                                .clipped()
                                 .overlay(
                                     ProgressView()
                                         .scaleEffect(1.5)
@@ -38,6 +44,8 @@ struct HeroCarouselView: View {
                         @unknown default:
                             Rectangle()
                                 .fill(Color.gray.opacity(0.2))
+                                .cornerRadius(16)
+                                .clipped()
                         }
                     }
                     
@@ -47,6 +55,8 @@ struct HeroCarouselView: View {
                         startPoint: .top,
                         endPoint: .bottom
                     )
+                    .cornerRadius(16)
+                    .clipped()
                     
                     // Información de la película
                     VStack {
@@ -80,8 +90,6 @@ struct HeroCarouselView: View {
                     }
                 }
                 .frame(height: 250)
-                .cornerRadius(16)
-                .clipped()
             }
         }
         .tabViewStyle(PageTabViewStyle(indexDisplayMode: .automatic))
