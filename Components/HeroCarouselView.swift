@@ -7,50 +7,48 @@ struct HeroCarouselView: View {
     var body: some View {
         TabView {
             ForEach(movies.prefix(5)) { movie in
-                AsyncImage(url: movie.backdropURL != nil ? URL(string: movie.backdropURL!) : nil) { phase in
-                    switch phase {
-                    case .success(let image):
-                        image
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    case .failure(_):
-                        Rectangle()
-                            .fill(Color.gray.opacity(0.2))
-                            .overlay(
-                                VStack(spacing: 8) {
-                                    Image(systemName: "photo")
-                                        .font(.title)
-                                        .foregroundColor(.gray)
-                                    Text("Error al cargar imagen")
-                                        .font(.caption)
-                                        .foregroundColor(.gray)
-                                }
-                            )
-                    case .empty:
-                        Rectangle()
-                            .fill(Color.gray.opacity(0.2))
-                            .overlay(
-                                ProgressView()
-                                    .scaleEffect(1.5)
-                            )
-                    @unknown default:
-                        Rectangle()
-                            .fill(Color.gray.opacity(0.2))
+                ZStack {
+                    AsyncImage(url: movie.backdropURL != nil ? URL(string: movie.backdropURL!) : nil) { phase in
+                        switch phase {
+                        case .success(let image):
+                            image
+                                .resizable()
+                                .aspectRatio(contentMode: .fill)
+                                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        case .failure(_):
+                            Rectangle()
+                                .fill(Color.gray.opacity(0.2))
+                                .overlay(
+                                    VStack(spacing: 8) {
+                                        Image(systemName: "photo")
+                                            .font(.title)
+                                            .foregroundColor(.gray)
+                                        Text("Error al cargar imagen")
+                                            .font(.caption)
+                                            .foregroundColor(.gray)
+                                    }
+                                )
+                        case .empty:
+                            Rectangle()
+                                .fill(Color.gray.opacity(0.2))
+                                .overlay(
+                                    ProgressView()
+                                        .scaleEffect(1.5)
+                                )
+                        @unknown default:
+                            Rectangle()
+                                .fill(Color.gray.opacity(0.2))
+                        }
                     }
-                }
-                .frame(height: 250)
-                .cornerRadius(16)
-                .clipped()
-                .overlay(
+                    
+                    // Overlay con gradiente
                     LinearGradient(
                         gradient: Gradient(colors: [Color.clear, Color.black.opacity(0.6)]),
                         startPoint: .top,
                         endPoint: .bottom
                     )
-                    .cornerRadius(16)
-                )
-                .overlay(
+                    
+                    // Información de la película
                     VStack {
                         Spacer()
                         HStack {
@@ -75,18 +73,19 @@ struct HeroCarouselView: View {
                         }
                         .padding()
                     }
-                )
-                .overlay(
+                    
+                    // Navegación
                     NavigationLink(destination: MovieDetailView(movie: movie)) {
                         Color.clear
                     }
-                )
+                }
+                .frame(height: 250)
+                .cornerRadius(16)
+                .clipped()
             }
         }
         .tabViewStyle(PageTabViewStyle(indexDisplayMode: .automatic))
         .frame(height: 250)
-        .cornerRadius(16)
-        .clipped()
         .padding(.horizontal, 16)
     }
 }
