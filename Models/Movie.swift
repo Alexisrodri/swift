@@ -24,16 +24,16 @@ struct Movie: Codable, Identifiable {
     }
     
     // Computed property para obtener la URL completa de la imagen
-    var posterURL: String {
-        guard let posterPath = posterPath else {
-            return ""
+    var posterURL: String? {
+        guard let posterPath = posterPath, !posterPath.isEmpty else {
+            return nil
         }
         return "https://image.tmdb.org/t/p/w500\(posterPath)"
     }
     
-    var backdropURL: String {
-        guard let backdropPath = backdropPath else {
-            return ""
+    var backdropURL: String? {
+        guard let backdropPath = backdropPath, !backdropPath.isEmpty else {
+            return nil
         }
         return "https://image.tmdb.org/t/p/w1280\(backdropPath)"
     }

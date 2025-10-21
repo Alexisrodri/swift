@@ -47,7 +47,7 @@ struct MovieCardVertical: View {
     var body: some View {
         HStack(spacing: 12) {
             // Imagen de la película
-            AsyncImage(url: URL(string: movie.posterURL)) { phase in
+            AsyncImage(url: movie.posterURL != nil ? URL(string: movie.posterURL!) : nil) { phase in
                 switch phase {
                 case .success(let image):
                     image
@@ -136,7 +136,7 @@ struct MovieCardHorizontal: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             // Imagen de la película
-            AsyncImage(url: URL(string: movie.posterURL)) { phase in
+            AsyncImage(url: movie.posterURL != nil ? URL(string: movie.posterURL!) : nil) { phase in
                 switch phase {
                 case .success(let image):
                     image

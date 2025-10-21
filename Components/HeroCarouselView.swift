@@ -7,7 +7,7 @@ struct HeroCarouselView: View {
     var body: some View {
         TabView {
             ForEach(movies.prefix(5)) { movie in
-                AsyncImage(url: URL(string: movie.backdropURL)) { phase in
+                AsyncImage(url: movie.backdropURL != nil ? URL(string: movie.backdropURL!) : nil) { phase in
                     switch phase {
                     case .success(let image):
                         image
@@ -85,6 +85,8 @@ struct HeroCarouselView: View {
         }
         .tabViewStyle(PageTabViewStyle(indexDisplayMode: .automatic))
         .frame(height: 250)
+        .cornerRadius(16)
+        .clipped()
         .padding(.horizontal, 16)
     }
 }

@@ -10,7 +10,7 @@ struct MovieDetailView: View {
             VStack(spacing: 0) {
                 // Header con imagen de fondo
                 ZStack(alignment: .bottomLeading) {
-                    AsyncImage(url: URL(string: movie.backdropURL)) { phase in
+                    AsyncImage(url: movie.backdropURL != nil ? URL(string: movie.backdropURL!) : nil) { phase in
                         switch phase {
                         case .success(let image):
                             image
