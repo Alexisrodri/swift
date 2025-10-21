@@ -4,8 +4,6 @@ struct HorizontalMoviesSection: View {
     let movies: [Movie]
     let onLoadMore: () -> Void
     
-    @State private var lastLoadedMovieId: Int?
-    
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             // Header de la sección
@@ -37,14 +35,6 @@ struct HorizontalMoviesSection: View {
                             MovieCardHorizontal(movie: movie)
                         }
                         .buttonStyle(PlainButtonStyle())
-                        .onAppear {
-                            // Solo cargar más si es la última película y no la hemos procesado antes
-                            if movie.id == movies.last?.id && lastLoadedMovieId != movie.id {
-                                lastLoadedMovieId = movie.id
-                                print("🎬 Last movie appeared: \(movie.title) (ID: \(movie.id))")
-                                onLoadMore()
-                            }
-                        }
                     }
                 }
                 .padding(.horizontal, 16)
