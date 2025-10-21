@@ -1,10 +1,10 @@
-import SwiftUI
-
 // MARK: - Horizontal Movies Section
 struct HorizontalMoviesSection: View {
     let title: String
     let movies: [Movie]
     let onLoadMore: () -> Void
+    
+    @State private var lastLoadedMovieId: Int?
     
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -38,7 +38,10 @@ struct HorizontalMoviesSection: View {
                         }
                         .buttonStyle(PlainButtonStyle())
                         .onAppear {
-                            if movie.id == movies.last?.id {
+                            // Solo cargar más si es la última película y no la hemos procesado antes
+                            if movie.id == movies.last?.id && lastLoadedMovieId != movie.id {
+                                lastLoadedMovieId = movie.id
+                                print("🎬 Last movie appeared: \(movie.title) (ID: \(movie.id))")
                                 onLoadMore()
                             }
                         }

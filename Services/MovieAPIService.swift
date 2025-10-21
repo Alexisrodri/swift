@@ -197,6 +197,7 @@ class MovieViewModel: ObservableObject {
     private let maxRetries = 3
     
     func loadMovies(category: MovieCategory, page: Int = 1) {
+        print("📡 Loading movies - Category: \(category.rawValue), Page: \(page)")
         isLoading = true
         errorMessage = nil
         hasError = false
@@ -213,6 +214,7 @@ class MovieViewModel: ObservableObject {
                     self?.hasError = false
                     self?.retryCount = 0 // Reset retry count on success
                     self?.isRetrying = false // Reset retry indicator on success
+                    print("✅ Movies loaded successfully - Page: \(response.page), Total pages: \(response.totalPages), Movies count: \(response.results.count)")
                     if page == 1 {
                         self?.movies = response.results
                     } else {
@@ -252,7 +254,8 @@ class MovieViewModel: ObservableObject {
     }
     
     func loadMoreMovies(category: MovieCategory) {
-        guard currentPage < totalPages && !isLoading else { return }
+        guard currentPage < totalPages && !isLoading && !isRetrying else { return }
+        print("🔄 Loading more movies - Current page: \(currentPage), Next page: \(currentPage + 1)")
         loadMovies(category: category, page: currentPage + 1)
     }
     
